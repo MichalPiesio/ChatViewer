@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>disable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\ChatViewer.BusinessLogic\ChatViewer.BusinessLogic.csproj" />
+      <ProjectReference Include="..\ChatViewer.Repository\ChatViewer.Repository.csproj" />
+      <ProjectReference Include="..\ChatViewer\ChatViewer.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="FakeItEasy" Version="7.3.1" />
+      <PackageReference Include="FluentAssertions" Version="6.8.0" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.0" />
+      <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.4.0" />
+      <PackageReference Include="xunit" Version="2.4.2" />
+    </ItemGroup>
+
+</Project>
