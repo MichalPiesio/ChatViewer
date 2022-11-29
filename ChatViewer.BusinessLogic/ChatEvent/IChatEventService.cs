@@ -6,4 +6,5 @@ public interface IChatEventService
 {
     Task<List<ChatEventDto>> GetChatEventsByMinute();
     Task<List<ChatEventAggregateDto>> GetChatEventHourlyAggregate();
+    Task<List<ChatEventAggregateDto>> GetChatEventDailyAggregate();
 }

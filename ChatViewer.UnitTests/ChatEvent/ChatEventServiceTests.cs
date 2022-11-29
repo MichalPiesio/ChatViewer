@@ -174,6 +174,72 @@ public class ChatEventServiceTests : IDisposable
         // ASSERT
         actualDtos.Should().BeEquivalentTo(expectedDtos);
     }
+    
+    [Fact]
+    public async Task GetChatEventDailyAggregate_ReturnsAggregatesPerEachDay()
+    {
+        // ARRANGE
+        var chatter1 = new Chatter
+        {
+            ChatterId = Guid.NewGuid(),
+            Name = "Chris"
+        };
+        _dbContext.Add(chatter1);
+        
+        var chatEvent1 = new Repository.Entities.ChatEvent
+        {
+            ChatEventId = Guid.NewGuid(),
+            ChatEventName = ChatEventTypes.EnterTheRoom,
+            ChatterId = chatter1.ChatterId,
+            EventDateTime = new DateTime(2022, 5, 6, 13, 0, 1)
+        };
+        _dbContext.Add(chatEvent1);
+        
+        var chatEvent2 = new Repository.Entities.ChatEvent
+        {
+            ChatEventId = Guid.NewGuid(),
+            ChatEventName = ChatEventTypes.EnterTheRoom,
+            ChatterId = chatter1.ChatterId,
+            EventDateTime = new DateTime(2022, 5, 7, 14, 0, 1)
+        };
+        _dbContext.Add(chatEvent2);
+        
+        await _dbContext.SaveChangesAsync();
+
+        var expectedDtos = new List<ChatEventAggregateDto>
+        {
+            new()
+            {
+                DateTime = new DateTime(2022, 5, 6, 0, 0, 0),
+                Details = new()
+                {
+                    new ChatEventAggregateDetailDto
+                    {
+                        ChatEventType = ChatEventTypes.EnterTheRoom,
+                        Count1 = 1,
+                    }
+                }
+            },
+            new()
+            {
+                DateTime = new DateTime(2022, 5, 7, 0, 0, 0),
+                Details = new()
+                {
+                    new ChatEventAggregateDetailDto
+                    {
+                        ChatEventType = ChatEventTypes.EnterTheRoom,
+                        Count1 = 1,
+                    }
+                }
+            }
+        };
+        
+        // ACT
+        var actualDtos = await _chatEventService.GetChatEventDailyAggregate();
+        
+        // ASSERT
+        actualDtos.Should().BeEquivalentTo(expectedDtos);
+    }
 
     private async Task SetUpData(string type, string text, string chatter2Id, int eventsCount = 1)
     {

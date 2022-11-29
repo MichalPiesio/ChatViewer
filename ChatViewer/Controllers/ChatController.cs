@@ -28,6 +28,11 @@ namespace ChatViewer.Controllers
             return await _chatEventService.GetChatEventHourlyAggregate();
         }
 
-       
+        [HttpGet]
+        [Route("day")]
+        public async Task<List<ChatEventAggregateDto>> GetByDay()
+        {
+            return await _chatEventService.GetChatEventDailyAggregate();
+        }
     }
 }

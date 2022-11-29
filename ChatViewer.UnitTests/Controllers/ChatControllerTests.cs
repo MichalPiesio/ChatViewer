@@ -71,4 +71,33 @@ public class ChatControllerTests
         // ASSERT 
         actualChatEventDtos.Should().BeEquivalentTo(expectedChatEventAggregateDtos);
     }
+    
+    [Fact]
+    public async Task GetByDay_ReturnsDto()
+    {
+        // ARRANGE
+        var expectedChatEventAggregateDtos = new List<ChatEventAggregateDto>()
+        {
+            new()
+            {
+                DateTime = new DateTime(2022, 4, 6, 0, 0, 0),
+                Details = new List<ChatEventAggregateDetailDto>()
+                {
+                    new()
+                    {
+                        ChatEventType = ChatEventTypes.Comment,
+                        Count1 = 10,
+                    }
+                }
+            }
+        };
+
+        A.CallTo(() => _chatEventService.GetChatEventDailyAggregate()).Returns(expectedChatEventAggregateDtos);
+        
+        // ACT
+        var actualChatEventDtos = await _chatController.GetByDay();
+        
+        // ASSERT 
+        actualChatEventDtos.Should().BeEquivalentTo(expectedChatEventAggregateDtos);
+    }
 }

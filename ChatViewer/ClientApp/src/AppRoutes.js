@@ -1,6 +1,6 @@
 import { SeedData } from "./components/SeedData";
 import { ChatByMinute } from "./components/ChatByMinute";
-import { ChatByHour } from "./components/ChatByHour";
+import { ChatAggregate } from "./components/ChatAggregate";
 import { Home } from "./components/Home";
 
 const AppRoutes = [
@@ -18,7 +18,11 @@ const AppRoutes = [
   },
   {
     path: '/chat-by-hour',
-    element: <ChatByHour />
+    element: <ChatAggregate granularity={'hour'}/>
+  },
+  {
+    path: '/chat-by-day',
+    element: <ChatAggregate granularity={'day'}/>
   }
 ];
 

@@ -34,27 +34,45 @@ public class ChatEventService : IChatEventService
 
         foreach (var group in groups)
         {
-            var date = group.Key.Date;
-            var hour = group.Key.Hour;
+            var dateTime = group.Key.Date.AddHours(group.Key.Hour);
             var chatEventName = group.Key.ChatEventName;
             
-            var aggregateDetail = AddDtosToAggregates(aggregates, date, hour, chatEventName);
+            var aggregateDetail = AddDtosToAggregates(aggregates, dateTime, chatEventName);
+            UpdateAggregates(chatEventName, aggregateDetail, group.ToList());
+        }
+
+        return aggregates;
+    }
+    
+    public async Task<List<ChatEventAggregateDto>> GetChatEventDailyAggregate()
+    {
+        var aggregates = new List<ChatEventAggregateDto>();
+        var groups = await _dbContext.ChatEvent
+            .GroupBy(x => new { x.EventDateTime.Date, x.ChatEventName })
+            .ToListAsync();
+
+        foreach (var group in groups)
+        {
+            var dateTime = group.Key.Date;
+            var chatEventName = group.Key.ChatEventName;
+            
+            var aggregateDetail = AddDtosToAggregates(aggregates, dateTime, chatEventName);
             UpdateAggregates(chatEventName, aggregateDetail, group.ToList());
         }
 
         return aggregates;
     }
 
-    private static ChatEventAggregateDetailDto AddDtosToAggregates(List<ChatEventAggregateDto> aggregates, DateTime date, int hour, string chatEventName)
+    private static ChatEventAggregateDetailDto AddDtosToAggregates(List<ChatEventAggregateDto> aggregates, DateTime dateTime, string chatEventName)
     {
         var aggregate = aggregates.FirstOrDefault(x =>
-            x.DateTime == date.AddHours(hour));
+            x.DateTime == dateTime);
 
         if (aggregate == null)
         {
             aggregate = new ChatEventAggregateDto
             {
-                DateTime = date.AddHours(hour),
+                DateTime = dateTime,
             };
             aggregates.Add(aggregate);
         }

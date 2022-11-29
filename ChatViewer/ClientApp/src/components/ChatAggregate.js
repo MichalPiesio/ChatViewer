@@ -1,18 +1,26 @@
 import React, { Component } from 'react';
 import { Comment, HighFive, LeaveTheRoom, EnterTheRoom} from '../contracts/ChatEventTypes';
 
-export class ChatByHour extends Component {
-  static displayName = ChatByHour.name;
+export class ChatAggregate extends Component {
+  static displayName = ChatAggregate.name;
 
   constructor(props) {
     super(props);
-    this.state = { chatEventAggregates: [], loading: true };
+    this.state = { chatEventAggregates: [], loading: true, granularity: props.granularity };
   }
 
   componentDidMount() {
     this.populateChatData();
   }
   
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if(prevProps.granularity !== this.props.granularity)
+    {
+      this.state.granularity = this.props.granularity;
+      this.populateChatData();
+    }
+  }
+
   static getDescription(detail) {
     switch (detail.chatEventType)
     {
@@ -40,16 +48,16 @@ export class ChatByHour extends Component {
         </thead>
         <tbody>
           {
-            chatEventAggregates.map(chatEventAggregate => 
+            chatEventAggregates.map((chatEventAggregate, i) => 
               <>
-                <tr key={chatEventAggregate.dateTime.toString()}>
+                <tr key={i}>
                   <td>{chatEventAggregate.dateTime}</td>
                   <td></td>
                 </tr>
                 { 
-                  chatEventAggregate.details.map(detail => <tr key={chatEventAggregate.dateTime.toString() + detail.chatEventType}>
+                  chatEventAggregate.details.map((detail, d) => <tr key={'r'+d}>
                   <td></td>
-                  <td>{ChatByHour.getDescription(detail)}</td>
+                  <td>{ChatAggregate.getDescription(detail)}</td>
                   </tr>)
                 }
               </>)
@@ -59,24 +67,22 @@ export class ChatByHour extends Component {
     );
   }
   
-  
   render() {
     let contents = this.state.loading
       ? <p><em>Loading...</em></p>
-      : ChatByHour.renderChatTable(this.state.chatEventAggregates);
+      : ChatAggregate.renderChatTable(this.state.chatEventAggregates);
 
     return (
       <div>
-        <h1 id="tableLabel" >Granularity: hour by hour</h1>
+        <h1 id="tableLabel" >Granularity: {this.state.granularity} by {this.state.granularity}</h1>
         {contents}
       </div>
     );
   }
 
   async populateChatData() {
-    const response = await fetch('chat/hour');
+    const response = await fetch('chat/'+this.state.granularity);
     const data = await response.json();
-    console.log(data);
     this.setState({ chatEventAggregates: data, loading: false });
   }
 }

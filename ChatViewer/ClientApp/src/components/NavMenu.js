@@ -41,6 +41,9 @@ export class NavMenu extends Component {
               <NavItem>
                 <NavLink tag={Link} className="text-dark" to="/chat-by-hour">Chat by hour</NavLink>
               </NavItem>
+              <NavItem>
+                <NavLink tag={Link} className="text-dark" to="/chat-by-day">Chat by day</NavLink>
+              </NavItem>
             </ul>
           </Collapse>
         </Navbar>

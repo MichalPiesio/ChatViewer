@@ -39,8 +39,8 @@ export class ChatByMinute extends Component {
           </tr>
         </thead>
         <tbody>
-          {chatEvents.map(chatEvent =>
-            <tr key={chatEvent.eventDateTime}>
+          {chatEvents.map((chatEvent, i) =>
+            <tr key={i}>
               <td>{chatEvent.eventDateTime}</td>
               <td>{ChatByMinute.getDescription(chatEvent)}</td>
             </tr>
