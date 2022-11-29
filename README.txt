@@ -7,7 +7,7 @@ SPA proxy takes a minute to launch so just wait for the redirect.
 Initial build may take a while due to the npm install for the frontend.
 I used Sqlite for persistence, the local file for the db will get created and migrations will run automatically on startup.
 
-Once it opens up on "Home" you get three other tabs up top, please first seed the database in "Seed data", each request adds 5 new people and 20 chat events.
-The other two tabs are for showing the chat logs - the first for minute by minute, the second one for hour by hour.
+Once it opens up on "Home" you get four other tabs up top, please first seed the database in "Seed data", each request adds 5 new people and 20 chat events.
+The other three tabs are for showing the chat logs - the first for minute by minute, then aggregates by hour and day.
 
 There are some unit tests in the ChatViewer.UnitTests project that you can run.
